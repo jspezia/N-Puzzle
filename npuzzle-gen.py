@@ -8,13 +8,13 @@ def make_puzzle(s, solvable, iterations):
 	def swap_empty(p):
 		idx = p.index(0)
 		poss = []
-		if idx - 1 >= 0:
+		if idx % s > 0:
 			poss.append(idx - 1)
-		if idx + 1 < len(p):
+		if idx % s < s - 1:
 			poss.append(idx + 1)
-		if idx - s >= 0:
+		if idx / s > 0:
 			poss.append(idx - s)
-		if idx + s < len(p):
+		if idx / s < s - 1:
 			poss.append(idx + s)
 		swi = random.choice(poss)
 		p[idx] = p[swi]
@@ -26,9 +26,9 @@ def make_puzzle(s, solvable, iterations):
 	
 	if not solvable:
 		if p[0] == 0 or p[1] == 0:
-			p[0], p[1] = p[1], p[0]
-		else:
 			p[-1], p[-2] = p[-2], p[-1]
+		else:
+			p[0], p[1] = p[1], p[0]
 
 	return p
 
@@ -61,7 +61,7 @@ def make_goal(s):
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 
-	parser.add_argument("size", type=int, help="Size of the puzzle's side. Must be >2.")
+	parser.add_argument("size", type=int, help="Size of the puzzle's side. Must be >3.")
 	parser.add_argument("-s", "--solvable", action="store_true", default=False, help="Forces generation of a solvable puzzle. Overrides -u.")
 	parser.add_argument("-u", "--unsolvable", action="store_true", default=False, help="Forces generation of an unsolvable puzzle")
 	parser.add_argument("-i", "--iterations", type=int, default=10000, help="Number of passes")
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 		print "Can't be both solvable AND unsolvable, dummy !"
 		sys.exit(1)
 
-	if args.size < 2:
+	if args.size < 3:
 		print "Can't generate a puzzle with size lower than 2. It says so in the help. Dummy."
 		sys.exit(1)
 
